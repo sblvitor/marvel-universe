@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:marvel_universe/main.dart';
-import 'package:marvel_universe/ui/marvel_universe.dart';
+import 'package:marvel_universe/pages/marvel_universe.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
