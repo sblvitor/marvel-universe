@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:marvel_universe/utils/colors.dart';
 
-import 'characters/characters_page.dart';
+import 'bottom_navigation_page.dart';
 
 class MarvelUniverse extends StatelessWidget {
   const MarvelUniverse({super.key});
@@ -14,7 +14,7 @@ class MarvelUniverse extends StatelessWidget {
         primarySwatch: primary,
         scaffoldBackgroundColor: const Color.fromARGB(255, 32, 32, 32)
       ),
-      home: const CharactersPage(title: 'Marvel Characters'),
+      home: const BottomNavigation(),
     );
   }
 }
