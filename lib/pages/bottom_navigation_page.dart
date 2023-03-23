@@ -34,7 +34,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
               icon: Icon(Icons.search),
               label: "Search"),
           BottomNavigationBarItem(
-              icon: Icon(Icons.newspaper),
+              icon: Icon(Icons.menu_book),
               label: "Comics")
         ],
       ),
@@ -43,7 +43,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
         children: const <Widget>[
           CharactersPage(title: 'Marvel Characters'),
           SearchPage(),
-          ComicsPage(),
+          ComicsPage(title: "Comics",),
         ],
       ),
     );

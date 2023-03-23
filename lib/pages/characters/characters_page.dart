@@ -35,6 +35,11 @@ class _CharactersPageState extends State<CharactersPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: [
+          IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.filter_list))
+        ],
       ),
       body: loading ? const Center(child: CircularProgressIndicator()) : ListView.builder(
         itemCount: charactersResponse.data?.results?.length,
