@@ -13,20 +13,52 @@ class CharactersPage extends StatefulWidget {
 
 class _CharactersPageState extends State<CharactersPage> {
 
-  var charactersRepository = CharactersRepository();
-  late CharactersResponse charactersResponse;
+  late CharactersRepository charactersRepository;
+  var charactersResponse = CharactersResponse();
   var loading = false;
+  final _scrollController = ScrollController();
+  int offset = 0;
+  var atBottom = false;
 
   @override
   void initState() {
+    _scrollController.addListener(() {
+      var positionToGetMore = _scrollController.position.maxScrollExtent * 0.7;
+      if(_scrollController.position.pixels > positionToGetMore) {
+        getCharacters();
+      }
+      if(_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+        setState(() {
+          atBottom = true;
+        });
+      } else {
+        setState(() {
+          atBottom = false;
+        });
+      }
+    });
+    charactersRepository = CharactersRepository();
     super.initState();
     getCharacters();
   }
 
   void getCharacters() async {
-    loading = true;
-    charactersResponse = await charactersRepository.getCharacters();
-    loading = false;
+    if(loading) return;
+    if(charactersResponse.data == null || charactersResponse.data?.results == null) {
+      setState(() {
+        loading = true;
+      });
+      charactersResponse = await charactersRepository.getCharacters(offset);
+      loading = false;
+    } else {
+      setState(() {
+        loading = true;
+      });
+      offset = offset + charactersResponse.data!.count!;
+      var tempList = await charactersRepository.getCharacters(offset);
+      charactersResponse.data?.results?.addAll(tempList.data!.results!);
+      loading = false;
+    }
     setState(() {});
   }
 
@@ -41,26 +73,35 @@ class _CharactersPageState extends State<CharactersPage> {
               icon: const Icon(Icons.filter_list))
         ],
       ),
-      body: loading ? const Center(child: CircularProgressIndicator()) : ListView.builder(
-        itemCount: charactersResponse.data?.results?.length,
-        itemBuilder: (BuildContext context, int index) {
-          var character = charactersResponse.data?.results?[index];
-          return Card(
-            margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            elevation: 16,
-            clipBehavior: Clip.hardEdge,
-            color: Colors.white10,
-            child: InkWell(
-              splashColor: Colors.red.withAlpha(50),
-              onTap: () {},
-              child: ThumbnailPlusInfos(
-                  imageUrl: "${character?.thumbnail?.path}/portrait_uncanny.${character?.thumbnail?.extension}",
-                  name: "${character?.name}",
-                  description: "${character?.description}"
-              )
+      body: Column(
+        children: [
+          Expanded(
+            child: (charactersResponse.data == null ||
+                charactersResponse.data!.results == null) ? const Center(child: CircularProgressIndicator()) : ListView.builder(
+              controller: _scrollController,
+              itemCount: charactersResponse.data?.results?.length,
+              itemBuilder: (BuildContext context, int index) {
+                var character = charactersResponse.data?.results?[index];
+                return Card(
+                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  elevation: 16,
+                  clipBehavior: Clip.hardEdge,
+                  color: Colors.white10,
+                  child: InkWell(
+                    splashColor: Colors.red.withAlpha(50),
+                    onTap: () {},
+                    child: ThumbnailPlusInfos(
+                        imageUrl: "${character?.thumbnail?.path}/portrait_uncanny.${character?.thumbnail?.extension}",
+                        name: "${character?.name}",
+                        description: "${character?.description}"
+                    )
+                  ),
+                );
+              },
             ),
-          );
-        },
+          ),
+          if(atBottom) const BottomCircularProgressBar()
+        ],
       ),
     );
   }
@@ -143,6 +184,25 @@ class _CharacterInfoState extends State<_CharacterInfo> {
     );
   }
 }
+
+class BottomCircularProgressBar extends StatefulWidget {
+  const BottomCircularProgressBar({Key? key}) : super(key: key);
+
+  @override
+  State<BottomCircularProgressBar> createState() => _BottomCircularProgressBarState();
+}
+
+class _BottomCircularProgressBarState extends State<BottomCircularProgressBar> {
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox(
+      width: 15,
+      height: 15,
+      child: CircularProgressIndicator(),
+    );
+  }
+}
+
 
 
 

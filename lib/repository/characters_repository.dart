@@ -11,7 +11,7 @@ class CharactersRepository {
 
   //get characters => _characterResponse;
 
-  Future<CharactersResponse> getCharacters() async {
+  Future<CharactersResponse> getCharacters(int offset) async {
     var dio = Dio();
 
     var ts = DateTime.now();
@@ -19,7 +19,9 @@ class CharactersRepository {
     var privateApiKey = dotenv.env['MARVEL_PRIVATE_KEY'];
     var hash = md5.convert(utf8.encode(ts.toString() + privateApiKey.toString() + publicApiKey.toString()));
 
-    var response = await dio.get("https://gateway.marvel.com:443/v1/public/characters?&ts=$ts&apikey=$publicApiKey&hash=$hash");
+    var response = await dio.get(
+        "https://gateway.marvel.com:443/v1/public/characters?offset=$offset&ts=$ts&apikey=$publicApiKey&hash=$hash"
+    );
     return CharactersResponse.fromJson(response.data);
   }
 
