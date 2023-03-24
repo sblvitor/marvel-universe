@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:marvel_universe/models/characters_response.dart';
+import 'package:marvel_universe/pages/character_details_page.dart';
 import 'package:marvel_universe/repository/characters_repository.dart';
 
 class CharactersPage extends StatefulWidget {
@@ -12,7 +13,6 @@ class CharactersPage extends StatefulWidget {
 }
 
 class _CharactersPageState extends State<CharactersPage> {
-
   late CharactersRepository charactersRepository;
   var charactersResponse = CharactersResponse();
   var loading = false;
@@ -24,10 +24,11 @@ class _CharactersPageState extends State<CharactersPage> {
   void initState() {
     _scrollController.addListener(() {
       var positionToGetMore = _scrollController.position.maxScrollExtent * 0.7;
-      if(_scrollController.position.pixels > positionToGetMore) {
+      if (_scrollController.position.pixels > positionToGetMore) {
         getCharacters();
       }
-      if(_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
         setState(() {
           atBottom = true;
         });
@@ -43,8 +44,9 @@ class _CharactersPageState extends State<CharactersPage> {
   }
 
   void getCharacters() async {
-    if(loading) return;
-    if(charactersResponse.data == null || charactersResponse.data?.results == null) {
+    if (loading) return;
+    if (charactersResponse.data == null ||
+        charactersResponse.data?.results == null) {
       setState(() {
         loading = true;
       });
@@ -68,39 +70,41 @@ class _CharactersPageState extends State<CharactersPage> {
       appBar: AppBar(
         title: Text(widget.title),
         actions: [
-          IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.filter_list))
+          IconButton(onPressed: () {}, icon: const Icon(Icons.filter_list))
         ],
       ),
       body: Column(
         children: [
           Expanded(
             child: (charactersResponse.data == null ||
-                charactersResponse.data!.results == null) ? const Center(child: CircularProgressIndicator()) : ListView.builder(
-              controller: _scrollController,
-              itemCount: charactersResponse.data?.results?.length,
-              itemBuilder: (BuildContext context, int index) {
-                var character = charactersResponse.data?.results?[index];
-                return Card(
-                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                  elevation: 16,
-                  clipBehavior: Clip.hardEdge,
-                  color: Colors.white10,
-                  child: InkWell(
-                    splashColor: Colors.red.withAlpha(50),
-                    onTap: () {},
-                    child: ThumbnailPlusInfos(
-                        imageUrl: "${character?.thumbnail?.path}/portrait_uncanny.${character?.thumbnail?.extension}",
-                        name: "${character?.name}",
-                        description: "${character?.description}"
-                    )
+                    charactersResponse.data!.results == null)
+                ? const Center(child: CircularProgressIndicator())
+                : ListView.builder(
+                    controller: _scrollController,
+                    itemCount: charactersResponse.data?.results?.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      var character = charactersResponse.data?.results?[index];
+                      return Card(
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 16),
+                        elevation: 16,
+                        clipBehavior: Clip.hardEdge,
+                        color: Colors.white10,
+                        child: InkWell(
+                            splashColor: Colors.red.withAlpha(50),
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (_) =>
+                                  CharacterDetailsPage(character: character!)));
+                            },
+                            child: ThumbnailPlusInfos(
+                                imageUrl: "${character?.thumbnail?.path}/portrait_uncanny.${character?.thumbnail?.extension}",
+                                name: "${character?.name}",
+                                description: "${character?.description}")),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
           ),
-          if(atBottom) const BottomCircularProgressBar()
+          if (atBottom) const BottomCircularProgressBar()
         ],
       ),
     );
@@ -108,11 +112,11 @@ class _CharactersPageState extends State<CharactersPage> {
 }
 
 class ThumbnailPlusInfos extends StatefulWidget {
-  const ThumbnailPlusInfos({
-    super.key,
-    required this.imageUrl,
-    required this.name,
-    required this.description});
+  const ThumbnailPlusInfos(
+      {super.key,
+      required this.imageUrl,
+      required this.name,
+      required this.description});
 
   final String imageUrl;
   final String name;
@@ -130,15 +134,14 @@ class _ThumbnailPlusInfosState extends State<ThumbnailPlusInfos> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.network(widget.imageUrl,
-              width: 100),
+          Hero(
+              tag: widget.name,
+              child: Image.network(widget.imageUrl, width: 100)),
           Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-                child:
-                _CharacterInfo(
-                    nome: widget.name,
-                    description: widget.description),
+                child: _CharacterInfo(
+                    nome: widget.name, description: widget.description),
               )
           )
         ],
@@ -148,9 +151,7 @@ class _ThumbnailPlusInfosState extends State<ThumbnailPlusInfos> {
 }
 
 class _CharacterInfo extends StatefulWidget {
-  const _CharacterInfo({
-    required this.nome,
-    required this.description});
+  const _CharacterInfo({required this.nome, required this.description});
 
   final String nome;
   final String description;
@@ -165,20 +166,20 @@ class _CharacterInfoState extends State<_CharacterInfo> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(widget.nome,
+        Text(
+          widget.nome,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.bold),
+              color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const Padding(padding: EdgeInsets.only(bottom: 8.0)),
-        Text(widget.description,
+        Text(
+          widget.description,
           maxLines: 6,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(color: Colors.white70),
-          textAlign: TextAlign.justify,
+          textAlign: TextAlign.start,
         )
       ],
     );
@@ -189,7 +190,8 @@ class BottomCircularProgressBar extends StatefulWidget {
   const BottomCircularProgressBar({Key? key}) : super(key: key);
 
   @override
-  State<BottomCircularProgressBar> createState() => _BottomCircularProgressBarState();
+  State<BottomCircularProgressBar> createState() =>
+      _BottomCircularProgressBarState();
 }
 
 class _BottomCircularProgressBarState extends State<BottomCircularProgressBar> {
@@ -202,7 +204,3 @@ class _BottomCircularProgressBarState extends State<BottomCircularProgressBar> {
     );
   }
 }
-
-
-
-

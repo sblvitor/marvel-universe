@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:marvel_universe/pages/search_page.dart';
 
-import 'characters/characters_page.dart';
+import 'characters_page.dart';
 import 'comics_page.dart';
 
 class BottomNavigation extends StatefulWidget {
