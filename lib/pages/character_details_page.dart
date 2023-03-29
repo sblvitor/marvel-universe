@@ -40,7 +40,7 @@ class _CharacterDetailsPageState extends State<CharacterDetailsPage> {
                       height: 16,
                     ),
                     Text(
-                      "  - Quadrinhos: ${widget.character.comics?.available}",
+                      " - Quadrinhos: ${widget.character.comics?.available}",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
@@ -50,7 +50,7 @@ class _CharacterDetailsPageState extends State<CharacterDetailsPage> {
                       height: 16,
                     ),
                     Text(
-                      "  - Séries: ${widget.character.series?.available}",
+                      " - Séries: ${widget.character.series?.available}",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
@@ -60,7 +60,7 @@ class _CharacterDetailsPageState extends State<CharacterDetailsPage> {
                       height: 16,
                     ),
                     Text(
-                      "  - Estórias: ${widget.character.stories?.available}",
+                      " - Estórias: ${widget.character.stories?.available}",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
@@ -70,7 +70,7 @@ class _CharacterDetailsPageState extends State<CharacterDetailsPage> {
                       height: 16,
                     ),
                     Text(
-                      "  - Eventos: ${widget.character.events?.available}",
+                      " - Eventos: ${widget.character.events?.available}",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
