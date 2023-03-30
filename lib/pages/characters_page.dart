@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:marvel_universe/models/characters_response.dart';
 import 'package:marvel_universe/pages/character_details_page.dart';
-import 'package:marvel_universe/repository/characters_repository.dart';
+import 'package:marvel_universe/repository/marvel_repository.dart';
 
 class CharactersPage extends StatefulWidget {
   const CharactersPage({super.key, required this.title});
@@ -13,7 +13,7 @@ class CharactersPage extends StatefulWidget {
 }
 
 class _CharactersPageState extends State<CharactersPage> {
-  late CharactersRepository charactersRepository;
+  late MarvelRepository marvelRepository;
   var charactersResponse = CharactersResponse();
   var loading = false;
   final _scrollController = ScrollController();
@@ -38,7 +38,7 @@ class _CharactersPageState extends State<CharactersPage> {
         });
       }
     });
-    charactersRepository = CharactersRepository();
+    marvelRepository = MarvelRepository();
     super.initState();
     getCharacters();
   }
@@ -50,14 +50,14 @@ class _CharactersPageState extends State<CharactersPage> {
       setState(() {
         loading = true;
       });
-      charactersResponse = await charactersRepository.getCharacters(offset);
+      charactersResponse = await marvelRepository.getCharacters(offset);
       loading = false;
     } else {
       setState(() {
         loading = true;
       });
       offset = offset + charactersResponse.data!.count!;
-      var tempList = await charactersRepository.getCharacters(offset);
+      var tempList = await marvelRepository.getCharacters(offset);
       charactersResponse.data?.results?.addAll(tempList.data!.results!);
       loading = false;
     }

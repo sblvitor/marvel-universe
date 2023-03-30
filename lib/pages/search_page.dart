@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:marvel_universe/pages/character_details_page.dart';
 
 import '../models/characters_response.dart';
-import '../repository/characters_repository.dart';
+import '../repository/marvel_repository.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -108,7 +108,7 @@ class QuerySearch extends StatefulWidget {
 }
 
 class _QuerySearchState extends State<QuerySearch> {
-  var charactersRepository = CharactersRepository();
+  var marvelRepository = MarvelRepository();
   var charactersResponse = CharactersResponse();
   var loading = false;
 
@@ -122,7 +122,7 @@ class _QuerySearchState extends State<QuerySearch> {
     setState(() {
       loading = true;
     });
-    charactersResponse = await charactersRepository.searchCharacters(widget.query);
+    charactersResponse = await marvelRepository.searchCharacters(widget.query);
     loading = false;
     setState(() {});
   }

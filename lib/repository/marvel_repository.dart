@@ -6,7 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../models/characters_response.dart';
 import 'package:dio/dio.dart';
 
-class CharactersRepository {
+class MarvelRepository {
   //late final CharactersResponse _characterResponse;
 
   //get characters => _characterResponse;
