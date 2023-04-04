@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:marvel_universe/models/comics_response.dart';
 
 import '../models/characters_response.dart';
 import 'package:dio/dio.dart';
@@ -11,15 +12,16 @@ class MarvelRepository {
 
   //get characters => _characterResponse;
 
+  final _publicApiKey = dotenv.env['MARVEL_PUBLIC_KEY'];
+  final _privateApiKey = dotenv.env['MARVEL_PRIVATE_KEY'];
+
   Future<CharactersResponse> getCharacters(int offset) async {
     var dio = Dio();
 
     var ts = DateTime.now();
-    var publicApiKey = dotenv.env['MARVEL_PUBLIC_KEY'];
-    var privateApiKey = dotenv.env['MARVEL_PRIVATE_KEY'];
-    var hash = generateMd5(ts.toString() + privateApiKey.toString() + publicApiKey.toString());
+    var hash = generateMd5(ts.toString() + _privateApiKey.toString() + _publicApiKey.toString());
     var response = await dio.get(
-        "https://gateway.marvel.com:443/v1/public/characters?offset=$offset&ts=$ts&apikey=$publicApiKey&hash=$hash"
+        "https://gateway.marvel.com:443/v1/public/characters?offset=$offset&ts=$ts&apikey=$_publicApiKey&hash=$hash"
     );
     return CharactersResponse.fromJson(response.data);
   }
@@ -28,13 +30,23 @@ class MarvelRepository {
     var dio = Dio();
 
     var ts = DateTime.now();
-    var publicApiKey = dotenv.env['MARVEL_PUBLIC_KEY'];
-    var privateApiKey = dotenv.env['MARVEL_PRIVATE_KEY'];
-    var hash = generateMd5(ts.toString() + privateApiKey.toString() + publicApiKey.toString());
+    var hash = generateMd5(ts.toString() + _privateApiKey.toString() + _publicApiKey.toString());
     var response = await dio.get(
-        "https://gateway.marvel.com:443/v1/public/characters?nameStartsWith=$query&ts=$ts&apikey=$publicApiKey&hash=$hash"
+        "https://gateway.marvel.com:443/v1/public/characters?nameStartsWith=$query&ts=$ts&apikey=$_publicApiKey&hash=$hash"
     );
     return CharactersResponse.fromJson(response.data);
+  }
+
+  Future<ComicsResponse> getComics() async {
+    var dio = Dio();
+
+    var ts = DateTime.now();
+    var hash = generateMd5(ts.toString() + _privateApiKey.toString() + _publicApiKey.toString());
+    var response = await dio.get(
+      "https://gateway.marvel.com:443/v1/public/comics?ts=$ts&apikey=$_publicApiKey&hash=$hash"
+    );
+
+    return ComicsResponse.fromJson(response.data);
   }
 
   String generateMd5(String input) {
