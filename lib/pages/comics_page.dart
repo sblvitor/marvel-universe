@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:marvel_universe/models/comics_response.dart';
+import 'package:marvel_universe/pages/comic_details_page.dart';
 import 'package:marvel_universe/repository/marvel_repository.dart';
 
 class ComicsPage extends StatefulWidget {
@@ -47,7 +48,10 @@ class _ComicsPageState extends State<ComicsPage> {
             var comic = comicsResponse.data!.results![index];
             return GridTile(
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (_) =>
+                        ComicDetailsPage(comic: comic)));
+                  },
                   child: Column(
                     children: <Widget>[
                       Expanded(child: Image.network("${comic.thumbnail?.path}/portrait_uncanny.${comic.thumbnail?.extension}")),
