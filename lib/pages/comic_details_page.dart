@@ -61,7 +61,7 @@ class _ComicDetailsPageState extends State<ComicDetailsPage> {
             const SizedBox(
               height: 8,
             ),
-            Text("Pages: ${widget.comic.pageCount}", style: TextStyle(color: Colors.white70)),
+            Text("Pages: ${widget.comic.pageCount}", style: const TextStyle(color: Colors.white70)),
             const SizedBox(
               height: 32,
             ),
